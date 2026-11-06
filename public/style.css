@@ -1,0 +1,171 @@
+/* ---------------------------------------------------------------
+   똥 피하기 — 맑은 하늘, 풀밭, 그리고 갈색 똥
+   모든 크기는 --u (게임 화면 폭 / 360) 기준이라 화면 크기에 맞춰 같이 커지고 작아져요.
+   --------------------------------------------------------------- */
+:root {
+  --sky-top: #7cc8f5;
+  --paper: rgba(255, 255, 255, 0.94);
+  --ink: #2b2118;
+  --soft: #6b5a4a;
+  --sun: #ffc933;
+  --sun-deep: #c98f00;
+  --line: #8fbfdc;
+  --ok: #1f8a4c;
+  --bad: #c0392b;
+  --font: 'Jua', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+  --u: calc(min(100vw, 100dvh * 9 / 16) / 360);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; height: 100%; }
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #12384f;
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hidden { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+:focus-visible { outline: 3px solid #1d6fd1; outline-offset: 2px; }
+
+/* ----------------------------------------------------------- 게임 화면 */
+.stage {
+  position: relative;
+  width: calc(var(--u) * 360);
+  height: calc(var(--u) * 640);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background: #bfe6ff;
+}
+@media (min-width: 600px) {
+  .stage { border-radius: 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); }
+}
+
+canvas { display: block; width: 100%; height: 100%; }
+
+/* ----------------------------------------------------------- 점수판 */
+.hud {
+  position: absolute;
+  top: calc(var(--u) * 10);
+  left: calc(var(--u) * 10);
+  right: calc(var(--u) * 10);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 8);
+  pointer-events: none;
+}
+.pill {
+  font: inherit;
+  font-size: calc(var(--u) * 16);
+  line-height: 1.2;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.88);
+  border: 0;
+  border-radius: 999px;
+  padding: calc(var(--u) * 4) calc(var(--u) * 12);
+}
+.pill b { font-weight: 400; font-size: calc(var(--u) * 20); }
+.pill-btn { margin-left: auto; font-size: calc(var(--u) * 13); pointer-events: auto; cursor: pointer; }
+
+/* ----------------------------------------------------------- 시작/게임오버 카드 */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--u) * 16);
+  background: rgba(18, 56, 79, 0.32);
+}
+.card {
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: calc(var(--u) * 18);
+  text-align: center;
+  background: var(--paper);
+  border-radius: calc(var(--u) * 22);
+  box-shadow: 0 calc(var(--u) * 8) calc(var(--u) * 24) rgba(0, 0, 0, 0.25);
+}
+
+.title {
+  margin: 0 0 calc(var(--u) * 6);
+  font-size: calc(var(--u) * 50);
+  font-weight: 400;
+  line-height: 1.1;
+  transform: rotate(-2deg);
+}
+.title.small { font-size: calc(var(--u) * 34); }
+.lead { margin: 0 0 calc(var(--u) * 6); font-size: calc(var(--u) * 16); }
+.how { margin: 0 0 calc(var(--u) * 14); font-size: calc(var(--u) * 13); color: var(--soft); }
+.result { margin: 0; font-size: calc(var(--u) * 18); }
+.result b { font-weight: 400; font-size: calc(var(--u) * 34); }
+.best { margin: calc(var(--u) * 2) 0 calc(var(--u) * 6); min-height: calc(var(--u) * 18); font-size: calc(var(--u) * 13); color: var(--soft); }
+
+.btn {
+  width: 100%;
+  font: inherit;
+  font-size: calc(var(--u) * 22);
+  color: var(--ink);
+  background: var(--sun);
+  border: 0;
+  border-radius: calc(var(--u) * 16);
+  padding: calc(var(--u) * 10) calc(var(--u) * 24);
+  box-shadow: 0 calc(var(--u) * 5) 0 var(--sun-deep);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.btn:active:not(:disabled) { transform: translateY(calc(var(--u) * 4)); box-shadow: 0 calc(var(--u) * 1) 0 var(--sun-deep); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.btn.small { width: auto; font-size: calc(var(--u) * 16); padding: calc(var(--u) * 8) calc(var(--u) * 16); }
+
+/* ----------------------------------------------------------- 랭킹 */
+.rank-title { margin: calc(var(--u) * 16) 0 calc(var(--u) * 6); font-size: calc(var(--u) * 16); font-weight: 400; }
+.rank {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: calc(var(--u) * 3);
+  text-align: left;
+  font-size: calc(var(--u) * 15);
+}
+.rank li {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 8);
+  padding: calc(var(--u) * 3) calc(var(--u) * 10);
+  background: rgba(124, 200, 245, 0.22);
+  border-radius: calc(var(--u) * 8);
+}
+.rank li:nth-child(1) { background: rgba(255, 201, 51, 0.55); }
+.rank .no { width: calc(var(--u) * 18); color: var(--soft); }
+.rank .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank li.empty { justify-content: center; color: var(--soft); background: none; }
+.rank.compact { max-height: calc(var(--u) * 112); overflow: auto; margin: calc(var(--u) * 8) 0 calc(var(--u) * 14); }
+
+/* ----------------------------------------------------------- 이름 입력 */
+.submit { display: flex; gap: calc(var(--u) * 8); margin-top: calc(var(--u) * 6); }
+input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: calc(var(--u) * 16);
+  padding: calc(var(--u) * 8) calc(var(--u) * 12);
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: calc(var(--u) * 12);
+}
+.msg { margin: calc(var(--u) * 6) 0 0; min-height: calc(var(--u) * 20); font-size: calc(var(--u) * 13); }
+.msg.ok { color: var(--ok); }
+.msg.err { color: var(--bad); }

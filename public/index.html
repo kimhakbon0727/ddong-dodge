@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12384f">
+  <title>똥 피하기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage" id="stage">
+    <canvas id="game" aria-label="똥 피하기 게임 화면"></canvas>
+
+    <div class="hud" id="hud">
+      <div class="pill"><span>피한 똥</span> <b id="hud-score">0</b></div>
+      <div class="pill"><b id="hud-time">0.0</b><span>초</span></div>
+      <button class="pill pill-btn" id="btn-sound" type="button" aria-pressed="true">소리 켬</button>
+    </div>
+
+    <!-- 시작 화면 -->
+    <section class="screen" id="screen-start">
+      <div class="card">
+        <h1 class="title">똥 피하기</h1>
+        <p class="lead">하늘에서 떨어지는 똥을 끝까지 피하세요. 한 번 맞으면 끝이에요.</p>
+        <p class="how">키보드는 ← → (또는 A D), 터치는 화면을 누른 채 좌우로 끌어요.</p>
+        <button class="btn" id="btn-start" type="button">시작하기</button>
+        <h2 class="rank-title">랭킹 TOP 10</h2>
+        <ol class="rank" id="rank-start"></ol>
+      </div>
+    </section>
+
+    <!-- 게임 오버 화면 -->
+    <section class="screen hidden" id="screen-over">
+      <div class="card">
+        <h2 class="title small">으악, 맞았어요!</h2>
+        <p class="result"><b id="over-score">0</b>개 피함 · <span id="over-time">0.0</span>초</p>
+        <p class="best" id="over-best"></p>
+        <form class="submit" id="form-submit" autocomplete="off">
+          <label class="sr" for="name">이름</label>
+          <input id="name" maxlength="10" placeholder="랭킹에 올릴 이름">
+          <button class="btn small" id="btn-submit" type="submit">등록</button>
+        </form>
+        <p class="msg" id="submit-msg" role="status"></p>
+        <ol class="rank compact" id="rank-over"></ol>
+        <button class="btn" id="btn-retry" type="button">다시 하기</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
